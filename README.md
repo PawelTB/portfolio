@@ -1,2 +1,2 @@
-# Sekcja o mnie
+# About me
 
