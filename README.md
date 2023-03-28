@@ -1,2 +1,2 @@
-# portfolio
-My Tester's Portfolio
+# Sekcja o mnie
+
