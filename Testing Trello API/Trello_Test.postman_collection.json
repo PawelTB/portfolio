@@ -1,0 +1,1264 @@
+{
+	"info": {
+		"_postman_id": "f1873e25-a87b-43b1-87e9-98d2d812bf51",
+		"name": "Trello_Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26295260"
+	},
+	"item": [
+		{
+			"name": "Create Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"verify created board name\", ()=>{\r",
+							"    pm.expect(resBody.name).to.eql(pm.collectionVariables.get(\"BoardName\"));\r",
+							"})\r",
+							"pm.test(\"verify description of created board\", ()=>{\r",
+							"    pm.expect(resBody.desc).to.be.a(\"string\");\r",
+							"    pm.collectionVariables.set(\"boardID\", resBody.id);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/boards/?name={{BoardName}}&key={{key}}&token={{token}}&desc=My new board&prefs_background=green",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"boards",
+						""
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{BoardName}}"
+						},
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "desc",
+							"value": "My new board"
+						},
+						{
+							"key": "prefs_background",
+							"value": "green"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Boards",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"pm.test(\"verify board's names\", ()=>{\r",
+							"    resBody.map(item=>{\r",
+							"        pm.expect(item.name).to.be.a(\"string\");\r",
+							"    })\r",
+							"})\r",
+							"pm.test(\"verify 'closed' is boolean type\", ()=>{\r",
+							"    resBody.map(item=>{\r",
+							"        pm.expect(item.closed).to.be.a(\"boolean\");\r",
+							"    })\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/members/me/boards?key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"members",
+						"me",
+						"boards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create List",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}} /lists?name={{ListName}}&key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}} "
+					],
+					"path": [
+						"lists"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{ListName}}"
+						},
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Lists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"pm.test(\"Verify id length\", ()=>{\r",
+							"    resBody.map(item=>{\r",
+							"        pm.expect(item.id).to.has.length.greaterThan(10);\r",
+							"    })\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify parametr 'closed'\",()=>{\r",
+							"    resBody.map(item=>{\r",
+							"        pm.expect(item.closed).to.eql(false);\r",
+							"    })\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/boards/{{boardID}}/lists?key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"boards",
+						"{{boardID}}",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify updated name value\",()=>{\r",
+							"    pm.expect(resBody.name).to.eql(pm.collectionVariables.get(\"UpdatedListName\"));\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/ists/{{listID}}?name={{UpdatedListName}}&key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"",
+						"ists",
+						"{{listID}}"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{UpdatedListName}}"
+						},
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify value od list id and board id\", ()=>{\r",
+							"    pm.expect(resBody.idList).to.eql(pm.collectionVariables.get(\"listID\"));\r",
+							"    pm.expect(resBody.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/cards?idList={{listID}}&name={{CardName}}&key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"cards"
+					],
+					"query": [
+						{
+							"key": "idList",
+							"value": "{{listID}}"
+						},
+						{
+							"key": "name",
+							"value": "{{CardName}}"
+						},
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Created Cards",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify short link\", ()=>{\r",
+							"    resBody.map(item=>{\r",
+							"        pm.expect(item.shortLink).to.be.a(\"string\");\r",
+							"    })\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/boards/{{boardID}}/cards?key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"boards",
+						"{{boardID}}",
+						"cards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify updated card name\", ()=>{\r",
+							"    pm.expect(resBody.name).to.eql(pm.collectionVariables.get(\"UpdatedCardName\"));\r",
+							"    pm.expect(resBody.name).to.be.a(\"string\");\r",
+							"})\r",
+							"pm.test(\"Verify card description\", ()=>{\r",
+							"    pm.expect(resBody.desc).to.eql(pm.collectionVariables.get(\"CardDesc\"));\r",
+							"    pm.expect(resBody.desc).to.be.a(\"string\");\r",
+							"})\r",
+							"pm.test(\"Verify cover brightness\", ()=>{\r",
+							"    pm.expect(resBody.cover.brightness).to.include.oneOf(['dark', 'light']);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/cards/{{cardID}}?name={{UpdatedCardName}}&desc={{CardDesc}}&key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"cards",
+						"{{cardID}}"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{UpdatedCardName}}"
+						},
+						{
+							"key": "desc",
+							"value": "{{CardDesc}}"
+						},
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Checklist",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Update Checklist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify name of checklist\", ()=>{\r",
+							"    pm.expect(resBody.name).to.eql(pm.collectionVariables.get(\"UpdatedCheckListName\"));\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/checklists/{{checkListID}}?name={{UpdatedCheckListName}}&key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"checklists",
+						"{{checkListID}}"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{UpdatedCheckListName}}"
+						},
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create CheckItem",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify checklist id\", ()=>{\r",
+							"    pm.expect(resBody.idChecklist).to.eql(pm.collectionVariables.get(\"checkListID\"))\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/checklists/{{checkListID}}/checkItems?key={{key}}&token={{token}}&name={{checkItemName}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"checklists",
+						"{{checkListID}}",
+						"checkItems"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{checkItemName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update CheckItem",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify name of checklist\", ()=>{\r",
+							"    pm.expect(resBody.name).to.be.a(\"string\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify parameter state\", ()=>{\r",
+							"    pm.expect(resBody.state).to.include.oneOf(['complete', 'incomplete']);\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/cards/{{cardID}}/checkItem/{{checkItemID}}?key={{key}}&token={{token}}&name={{updatedCheckItemName}}&state=complete",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"cards",
+						"{{cardID}}",
+						"checkItem",
+						"{{checkItemID}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{updatedCheckItemName}}"
+						},
+						{
+							"key": "state",
+							"value": "complete"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get CheckItem",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify name of checkItem\", ()=>{\r",
+							"    pm.expect(resBody.name).to.has.length.greaterThan(0);\r",
+							"    pm.expect(resBody.name).to.has.length.lessThan(16385);\r",
+							"    pm.expect(resBody.name).to.be.a(\"string\");\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/checklists/{{checkListID}}/checkItems/{{checkItemID}}?key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"checklists",
+						"{{checkListID}}",
+						"checkItems",
+						"{{checkItemID}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Label",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify idBoard\", ()=>{\r",
+							"    pm.expect(resBody.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify name of label\", ()=>{\r",
+							"    pm.expect(resBody.name).to.be.a(\"string\")\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify color of label\", ()=>{\r",
+							"    pm.expect(resBody.color).to.include.oneOf(['yellow', 'purple', 'blue', 'red', 'green', 'orange', 'black', 'sky', 'pink', 'lime']);\r",
+							"})\r",
+							"pm.collectionVariables.set(\"labelID\", resBody.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/labels?name={{labelName}}&idBoard={{boardID}}&key={{key}}&token={{token}}&color={{labelColor}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"labels"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{labelName}}"
+						},
+						{
+							"key": "idBoard",
+							"value": "{{boardID}}"
+						},
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "color",
+							"value": "{{labelColor}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Label",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify idLabel\", ()=>{\r",
+							"    pm.expect(resBody.id).to.eql(pm.collectionVariables.get(\"labelID\"));\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify name of label\", ()=>{\r",
+							"    pm.expect(resBody.name).to.be.a(\"string\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify color of label\", ()=>{\r",
+							"    pm.expect(resBody.color).to.include.oneOf(['yellow', 'purple', 'blue', 'red', 'green', 'orange', 'black', 'sky', 'pink', 'lime']);\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/labels/{{labelID}}?name={{updatedLabelName}}&color={{updatedLabelColor}}&key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"labels",
+						"{{labelID}}"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{updatedLabelName}}"
+						},
+						{
+							"key": "color",
+							"value": "{{updatedLabelColor}}"
+						},
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add a Label to a Card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/cards/{{cardID}}/idLabels?key={{key}}&token={{token}}&value={{labelID}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"cards",
+						"{{cardID}}",
+						"idLabels"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "value",
+							"value": "{{labelID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Comment to a Card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resBody;\r",
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    resBody=pm.response.json();\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify comment\", ()=>{\r",
+							"    pm.expect(resBody.data.text).to.eql(pm.collectionVariables.get(\"commentText\"));\r",
+							"    pm.expect(resBody.data.text).to.be.a(\"string\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify date of comment\", ()=>{\r",
+							"    pm.expect(resBody.date).to.be.a(\"date\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/cards/{{cardID}}/actions/comments?text={{commentText}}&key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"cards",
+						"{{cardID}}",
+						"actions",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "{{commentText}}"
+						},
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Comment Action on a Card",
+			"request": {
+				"method": "PUT",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get Actions On a Card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/cards/{{cardID}}/actions?key={{key}}&token={{token}}&page=2",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"cards",
+						"{{cardID}}",
+						"actions"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Label",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/labels/{{labelID}}?key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"labels",
+						"{{labelID}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete CheckItem",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/cards/{{cardID}}/checkItem/{{checkItemID}}?key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"cards",
+						"{{cardID}}",
+						"checkItem",
+						"{{checkItemID}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Checklist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/checklists/{{checkListID}}?key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"checklists",
+						"{{checkListID}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/cards/{{cardID}}?key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"cards",
+						"{{cardID}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify status code\", ()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASEUrl}}/boards/{{boardID}}?key={{key}}&token={{token}}",
+					"host": [
+						"{{BASEUrl}}"
+					],
+					"path": [
+						"boards",
+						"{{boardID}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASEUrl",
+			"value": "https://api.trello.com/1",
+			"type": "string"
+		},
+		{
+			"key": "BoardName",
+			"value": "Board from API",
+			"type": "string"
+		},
+		{
+			"key": "boardID",
+			"value": ""
+		},
+		{
+			"key": "ListName",
+			"value": "New list from API",
+			"type": "string"
+		},
+		{
+			"key": "listID",
+			"value": ""
+		},
+		{
+			"key": "UpdatedListName",
+			"value": "Testing"
+		},
+		{
+			"key": "CardName",
+			"value": "Testing Card"
+		},
+		{
+			"key": "UpdatedCardName",
+			"value": "Updated Testing Card"
+		},
+		{
+			"key": "CardDesc",
+			"value": "Testing Description"
+		},
+		{
+			"key": "cardID",
+			"value": ""
+		},
+		{
+			"key": "checkListName",
+			"value": "testing checklist"
+		},
+		{
+			"key": "checkListID",
+			"value": ""
+		},
+		{
+			"key": "UpdatedCheckListName",
+			"value": "updated testing checklist"
+		},
+		{
+			"key": "checkItemName",
+			"value": "testing checkItem"
+		},
+		{
+			"key": "checkItemID",
+			"value": ""
+		},
+		{
+			"key": "labelName",
+			"value": "testing label"
+		},
+		{
+			"key": "labelColor",
+			"value": "red"
+		},
+		{
+			"key": "updatedCheckItemName",
+			"value": "updated testing checkitem"
+		},
+		{
+			"key": "labelID",
+			"value": ""
+		},
+		{
+			"key": "updatedLabelName",
+			"value": "updated label"
+		},
+		{
+			"key": "updatedLabelColor",
+			"value": "yellow"
+		},
+		{
+			"key": "commentText",
+			"value": "testing comment"
+		},
+		{
+			"key": "actionID",
+			"value": ""
+		},
+		{
+			"key": "updatedComment",
+			"value": "updated testing comment"
+		}
+	]
+}
