@@ -8,16 +8,16 @@ My name is Paweł Tabor. I graduated from University of Science and Technology i
 - Git
 - ShareX
 - PicPick
-##Tech skills
+## Tech skills
 - SQL
 - HTML, CSS
 - Java
 - Creating test cases,
 - Reporting bugs
 - REST API testing
-##Certificates
+## Certificates
 - ISTQB Foundation Level
-##Courses
+## Courses
 - Post-graduate studies 
 - Software Engineering
 - IT Training - Front and Back End Developer
