@@ -12,7 +12,7 @@ My name is Paweł Tabor. I graduated from University of Science and Technology i
 - SQL
 - HTML, CSS
 - Java
-- Creating test cases,
+- Creating test cases
 - Reporting bugs
 - REST API testing
 ## Certificates
