@@ -22,5 +22,5 @@ My name is Paweł Tabor. I graduated from University of Science and Technology i
 - Software Engineering
 - IT Training - Front and Back End Developer
 ## My Projects
-- [Trello API Testing] (https://github.com/PawelTB/portfolio/tree/master/Testing%20Trello%20API)
+- Trello API Testing (https://github.com/PawelTB/portfolio/tree/master/Testing%20Trello%20API)
 
