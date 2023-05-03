@@ -12,7 +12,7 @@ In this project I tested components of an application like: <br>
 ## Tools
 - TestLink  - I created test cases and test report using this tool
 - Jira  - I created bug reports using this tool
-- Pic Pick  - I used this tool to do screenshots <br>
+- Pic Pick  - I used this tool to do screenshots <br><br>
 Test cases were based on the specification:<br>
 [Software Requirements Specification](https://github.com/PawelTB/portfolio/blob/main/Testing%20Guru99%20Bank/Software%20Requirements%20Specification/viewguru99-banking-project-software-requirements-specification-13.pdf) <br>
 ## Environment
