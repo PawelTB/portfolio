@@ -23,4 +23,5 @@ My name is Paweł Tabor. I graduated from University of Science and Technology i
 - IT Training - Front and Back End Developer
 ## My Projects
 - [Trello API Testing](https://github.com/PawelTB/portfolio/tree/main/Testing%20Trello%20API)
+- [Testing Guru99 Bank application](
 
